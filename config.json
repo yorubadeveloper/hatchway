@@ -1,0 +1,7 @@
+{
+
+    "install": "pip3 install pipenv && pipenv install && pipenv shell",
+    "run": "flask run",
+    "port": 5000
+
+}

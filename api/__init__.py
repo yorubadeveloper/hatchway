@@ -1,47 +1,17 @@
-import os
-import random
+
+from functools import lru_cache
+
 import requests
-
 from flask import Flask, request, jsonify
-
-# from flask_cors import CORS
 from flask_restful import Api, Resource
 
-# from sqlalchemy import exc
-
-# from models import setup_db, Question, Category
-
-# QUESTIONS_PER_PAGE = 10
-
-hatchways_api_url = "https://hatchways.io/api/assessment/blog/posts?tag=tech"
 route_1 = "/api/ping"
 route_2 = "/api/posts"
-
-
-# def paginate(request, selection):
-#     page = request.args.get('page', 1, int)
-#     start = (page - 1) * QUESTIONS_PER_PAGE
-#     end = start + QUESTIONS_PER_PAGE
-#     return [question.format() for question in selection[start:end]]
 
 
 # Application factory
 def create_app(test_config=None):
     app = Flask(__name__)
-
-    # Initializes Cross Origin Resource sharing for the app
-    # CORS(app)
-    # # Set Access-Control-Allow
-    # @app.after_request
-    # def after_request(response):
-    #     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    #     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    #     return response
-
-    # if not test_config:
-    #     setup_db(app, os.getenv('DEV_DB_URI'))
-    # else:
-    #     setup_db(app, os.getenv('TEST_DB_URI'))
 
     api = Api(app)
 
@@ -50,6 +20,8 @@ def create_app(test_config=None):
             return {"success": True}, 200
 
     class Blog(Resource):
+
+        @lru_cache()
         def get(self):
 
             # Error messages
