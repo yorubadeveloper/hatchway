@@ -23,6 +23,10 @@ def create_app(test_config=None):
 
         @lru_cache()
         def get(self):
+            """
+
+            127.0.0.1:5000/api/posts?tags=history,tech&sortBy=likes&direction=desc
+            """
 
             # Error messages
             tag_error_responses = {"error": "Tags parameter is required"}
@@ -49,18 +53,24 @@ def create_app(test_config=None):
 
             # Send HTTP GET request to gather data from provider
             try:
-                posts = []
+                data = []
                 for tag in tags:
                     resp = requests.get(
                         f"https://hatchways.io/api/assessment/blog/posts?tag={tag}"
                     ).json()
-                    posts += resp["posts"]
+                    data += resp["posts"]
+
+                print(len(data))
+                print(data)
+                data = set(data)
+                print(len(data))
 
                 # Sort in-place based on desired (parameters) criteria
                 is_reverse = True if direction == "desc" else False
-                posts.sort(key=lambda x: x[sort_by], reverse=is_reverse)
+                # data.sort(key=lambda x: x[sort_by], reverse=is_reverse)
+                data = sorted(data, key=lambda x: x[sort_by], reverse=is_reverse)
 
-                return {"posts": posts}, 200
+                return {"posts": data}, 200
 
             except:
                 return unclear_error_responses, 400
